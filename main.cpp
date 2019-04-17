@@ -100,7 +100,6 @@ int main(int argc, char const *argv[]) {
     // La cadena a verificar.
     string inputString = "";
 
-
     cout << "Archivo con la gramática: ";
     cin >> fileString;
     cout << "Cadena a evaluar: ";
@@ -112,26 +111,5 @@ int main(int argc, char const *argv[]) {
     // Se obtienen las producciones de las reglas.
     map< string, set<string> > productions = getProductions(rules);
 
-    for(auto prod : productions){
-        set<string> val = productions[prod.first];
-        set<string>::iterator it;
-        for (it = val.begin(); it != val.end(); ++it) {
-            std::cout << prod.first + " está en: " + *it << '\n';
-        }
-    }
     return 0;
 }
-
-
-
-
-
-/*
-int main () {
-  ofstream myfile;
-  myfile.open ("example.txt");
-  myfile << "Writing this to a file.\n";
-  myfile.close();
-  return 0;
-}
-*/
