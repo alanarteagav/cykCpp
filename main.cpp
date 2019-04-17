@@ -3,7 +3,7 @@
 #include <iostream>
 #include <iterator>
 #include <map>
-#include <set>
+#include <unordered_set>
 #include <stdlib.h>
 #include <string>
 #include <vector>
@@ -60,8 +60,8 @@ void verifyTerminal(string terminal) {
 
 // Función que obtiene las produccciones de una GLC en forma normal de Chomsky,
 // verificando que la gramática sea válida, de lo contrario, el programa termina
-map< string, set<string> > getProductions(vector<string> rules){
-    map< string, set<string> > productions;
+map< string, unordered_set<string> > getProductions(vector<string> rules){
+    map< string, unordered_set<string> > productions;
 
     bool hasInitial = false;
 
@@ -85,7 +85,7 @@ map< string, set<string> > getProductions(vector<string> rules){
 
         for(string prod : prods){
             verifyTerminal(prod);
-            productions[prod].insert(var);
+            productions[var].insert(prod);
         }
     }
     if (!hasInitial)
@@ -109,7 +109,7 @@ int main(int argc, char const *argv[]) {
     vector<string> rules = readFile(fileString);
 
     // Se obtienen las producciones de las reglas.
-    map< string, set<string> > productions = getProductions(rules);
+    map< string, unordered_set<string> > productions = getProductions(rules);
 
     return 0;
 }
