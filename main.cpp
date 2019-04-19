@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "cyk.h"
+
 using namespace std;
 
 // Función auxiliar que termina el programa, enviando un ensaje que recibe
@@ -110,6 +112,19 @@ int main(int argc, char const *argv[]) {
 
     // Se obtienen las producciones de las reglas.
     map< string, unordered_set<string> > productions = getProductions(rules);
+
+    CYKTable table = (inputString);
+
+    pair <bool, CYKTable> result = cyk(inputString, productions);
+
+    cout << "Resultado:" << '\n';
+    if (result.first)
+        cout << inputString + " está en L(G)." << "\n\n";
+    else
+        cout << inputString + " no está en L(G)." << "\n\n";
+
+    cout << "La tabla de posibles derivaciones es:" << '\n';
+    cout << result.second.toString() << '\n';
 
     return 0;
 }
