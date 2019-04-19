@@ -60,48 +60,39 @@ void verifyTerminal(string terminal) {
     }
 }
 
-// Función que obtiene las produccciones de una GLC en forma normal de Chomsky,
-// verificando que la gramática sea válida, de lo contrario, el programa termina
-map< string, unordered_set<string> > getProductions(vector<string> rules){
-    map< string, unordered_set<string> > productions;
-
+// Función que obtiene una gramática en forma normal de Chomsky, verificando que
+// la gramática sea válida, de lo contrario, el programa termina.
+map< string, unordered_set<string> > getGrammar(vector<string> rules){
+    map< string, unordered_set<string> > grammar;
     bool hasInitial = false;
-
     for (auto line : rules) {
-
         line.erase(remove(line.begin(), line.end(), ' '), line.end());
-
         if (line.find("->") == string::npos)
             exitProgram("GRAMATICA INVÁLIDA: existe regla sin símbolo '->'");
-
         vector<string> rule = splitString(line, "->");
         string var = rule[0];
-
         if (!isupper(var[0]) || var.length() != 1)
             exitProgram("GRAMATICA INVÁLIDA: símbolo no terminal inválido");
-
         if (var.compare("S") == 0)
             hasInitial = true;
-
         vector<string> prods = splitString(rule[1], "|") ;
-
         for(string prod : prods){
             verifyTerminal(prod);
-            productions[var].insert(prod);
+            grammar[var].insert(prod);
         }
     }
     if (!hasInitial)
         exitProgram("GRAMATICA INVÁLIDA: no se encontró símbolo inicial");
-    return productions;
+    return grammar;
 }
 
 int main(int argc, char const *argv[]) {
-
     // El nombre del archivo que contiene la gramática.
     string fileString = "";
     // La cadena a verificar.
     string inputString = "";
 
+    // Se recibe la entrada.
     cout << "Archivo con la gramática: ";
     cin >> fileString;
     cout << "Cadena a evaluar: ";
@@ -109,27 +100,24 @@ int main(int argc, char const *argv[]) {
 
     // Se obtienen las reglas de la gramática a partir del archivo.
     vector<string> rules = readFile(fileString);
-
     // Se obtienen las producciones de las reglas.
-    map< string, unordered_set<string> > productions = getProductions(rules);
-
+    map< string, unordered_set<string> > grammar = getGrammar(rules);
+    // Se genera la tabla CYK para la cadena.
     CYKTable table = (inputString);
-
-    pair <bool, CYKTable> result = cyk(inputString, productions);
-
+    // Se ejecuta el algoritmo CYK con la cadena y la gramática.
+    pair <bool, CYKTable> result = cyk(inputString, grammar);
+    // Se imprime el resultado.
     cout << "Resultado:" << '\n';
     if (result.first)
         cout << inputString + " está en L(G)." << "\n\n";
     else
         cout << inputString + " no está en L(G)." << "\n\n";
-
     cout << "La tabla de posibles derivaciones es:" << '\n';
     cout << result.second.toString() << '\n';
-
+    // Si la cadena es acepada, se imprimen las derivaciones más a la izquierda.
     if (result.first) {
         cout << "Derivación mas a la izquierda:" << '\n';
-        cout << leftmost(inputString, result.second, productions) << '\n';
+        cout << leftmost(inputString, result.second, grammar) << '\n';
     }
-
     return 0;
 }
