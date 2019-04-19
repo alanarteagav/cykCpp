@@ -1,12 +1,7 @@
-#include <algorithm>
-#include <fstream>
-#include <iostream>
 #include <iterator>
 #include <map>
 #include <unordered_set>
-#include <stdlib.h>
 #include <string>
-#include <vector>
 
 #include "cykTable.h"
 
