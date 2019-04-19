@@ -42,13 +42,11 @@ pair <bool, CYKTable> cyk(string inputString,
     }
     // Rellena las producciones para subcadenas de tamaño 2 <= k <= n
     // con k el tamaño de la subcadena y n el tamaño de la cadena de entrada.
-    for (int m = 2; m <= n; m++) {
-        for (int i = 0; i <= n-m; i++) {
+    for (int m = 2; m <= n; m++)
+        for (int i = 0; i <= n-m; i++)
             for (int j = 1; j < m; j++) {
-
                 string strB = inputString.substr(i, j);
                 string strC = inputString.substr(i+j, m-j);
-
                 for(auto production : grammar){
                     unordered_set<string> stringSet = grammar[production.first];
                     unordered_set<string>::iterator it;
@@ -58,18 +56,15 @@ pair <bool, CYKTable> cyk(string inputString,
                             string prodB(1, pair[0]);
                             string prodC(1, pair[1]);
 
-                            if ((table.isInEntry(prodB, i+j, i)) && (table.isInEntry(prodC, i+m, i+j))) {
+                            if ((table.isInEntry(prodB, i+j, i))
+                            && (table.isInEntry(prodC, i+m, i+j)))
                                 table.addToEntry(production.first, i+m, i);
-                            }
                         }
                     }
                 }
             }
-        }
-    }
     // Determina si la cadena es aceptada, dado si el símbolo 'S' figura en la
     // entrada (0,n) de la tabla CYK, con n el tamaño de la cadena de entrada.
     accepted = table.isInEntry("S", n, 0);
-
     return make_pair(accepted, table);
 }
