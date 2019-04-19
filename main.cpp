@@ -8,6 +8,8 @@
 #include <string>
 #include <vector>
 
+#include "cyk.h"
+
 using namespace std;
 
 // Función auxiliar que termina el programa, enviando un ensaje que recibe
@@ -110,6 +112,11 @@ int main(int argc, char const *argv[]) {
 
     // Se obtienen las producciones de las reglas.
     map< string, unordered_set<string> > productions = getProductions(rules);
+
+    CYKTable table = (inputString);
+
+    cyk(inputString, productions);
+
 
     return 0;
 }
