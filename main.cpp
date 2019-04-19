@@ -115,8 +115,16 @@ int main(int argc, char const *argv[]) {
 
     CYKTable table = (inputString);
 
-    cyk(inputString, productions);
+    pair <bool, CYKTable> result = cyk(inputString, productions);
 
+    cout << "Resultado:" << '\n';
+    if (result.first)
+        cout << inputString + " está en L(G)." << "\n\n";
+    else
+        cout << inputString + " no está en L(G)." << "\n\n";
+
+    cout << "La tabla de posibles derivaciones es:" << '\n';
+    cout << result.second.toString() << '\n';
 
     return 0;
 }
