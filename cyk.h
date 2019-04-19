@@ -2,8 +2,12 @@
 #include <map>
 #include <unordered_set>
 #include <string>
+#include <tuple>
+#include <stack>
 
 #include "cykTable.h"
+
+using namespace std;
 
 // Función auxiliar que determina si una producción es de la forma A -> BC
 bool isVariablePair(string pair){
@@ -62,4 +66,69 @@ pair <bool, CYKTable> cyk(string inputString,
     // entrada (0,n) de la tabla CYK, con n el tamaño de la cadena de entrada.
     accepted = table.isInEntry("S", n, 0);
     return make_pair(accepted, table);
+}
+
+// Función auxiliar que regresa la representación en cadena de una pila.
+string getStackString(stack < tuple <string, int, int> > derivationStack){
+    string stackString;
+    while (!derivationStack.empty()){
+        stackString += get<0>(derivationStack.top());
+        derivationStack.pop();
+    }
+    return stackString;
+}
+
+// Función que regresa la representación en cadena de las derivaciones más
+// a la izquierda de una cadena que es aceptada por una GLC en FNC.
+string leftmost(string inputString, CYKTable table,
+                map < string, unordered_set<string> > grammar){
+    stack < tuple <string, int, int> > derivationStack;
+    int n = inputString.length();
+
+    string derivedTerminals;
+    string leftmostString;
+
+    tuple <string, int, int> start = make_tuple("S", n, 0);
+    derivationStack.push(start);
+
+    leftmostString += "S";
+
+    while (!derivationStack.empty()) {
+        tuple <string, int, int> item = derivationStack.top();
+        string s = get<0>(item);
+        int i = get<2>(item);
+        int j = get<1>(item);
+
+        if (j == i+1) {
+            derivationStack.pop();
+            derivedTerminals += inputString[i];
+            leftmostString += " -> " + derivedTerminals
+                            + getStackString(derivationStack) ;
+        } else {
+            derivationStack.pop();
+            unordered_set<string> stringSet = grammar[s];
+            unordered_set<string>::iterator it;
+
+            for (int k = i+1; k < j; k++) {
+                for (it = stringSet.begin(); it != stringSet.end(); ++it) {
+                    if (isVariablePair(*it)) {
+                        string pair = *it;
+                        string prodB(1, pair[0]);
+                        string prodC(1, pair[1]);
+
+                        if ((table.isInEntry(prodB, k, i))
+                        && (table.isInEntry(prodC, j, k))){
+                            // code
+                            derivationStack.push(make_tuple(prodC, j, k));
+                            derivationStack.push(make_tuple(prodB, k, i));
+                            leftmostString += " -> " + derivedTerminals
+                                            + getStackString(derivationStack) ;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return leftmostString;
 }

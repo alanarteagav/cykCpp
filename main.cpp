@@ -126,5 +126,10 @@ int main(int argc, char const *argv[]) {
     cout << "La tabla de posibles derivaciones es:" << '\n';
     cout << result.second.toString() << '\n';
 
+    if (result.first) {
+        cout << "Derivación mas a la izquierda:" << '\n';
+        cout << leftmost(inputString, result.second, productions) << '\n';
+    }
+
     return 0;
 }
