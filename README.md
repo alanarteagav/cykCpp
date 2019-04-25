@@ -23,5 +23,5 @@ seguido de la cadena que se desea verificar:
 ```
 
 ### Autores:
-Arteaga Vázquez Alan Ernesto
+Arteaga Vázquez Alan Ernesto\
 Figueroa Sandoval Gerardo Emiliano
